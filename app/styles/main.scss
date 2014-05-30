@@ -58,12 +58,16 @@ body {
         position: absolute;
         z-index: 300;
         color: #ffffff;
-        -webkit-transition: all 0.8s ease-in-out;
     }
 
-    div.moveright {
-        -webkit-transform: translateX(100px);
+    div.enemy {
+        -webkit-transition: all 0.8s ease-in-out;
+        
+        &.moveright {
+            -webkit-transform: translateX(100px);
+        }
     }
+    
 }
 
 /* Game styling */
