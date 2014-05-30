@@ -66,9 +66,23 @@ body {
     }
 }
 
+/* Game styling */
+
 .jumbotron#game {
     padding: 0;
+    overflow: hidden;
+
+    .enemy {
+        border-radius: 8px;
+    }
+
+    .exit {
+        border: 2px solid black;
+        border-bottom-width: 4px;
+    }
 }
+
+
 
 /* Supporting marketing content */
 .marketing {
