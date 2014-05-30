@@ -61,7 +61,7 @@ body {
     }
 
     div.enemy {
-        -webkit-transition: all 0.8s ease-in-out;
+        -webkit-transition: all 1.2s ease-in-out;
         
         &.moveright {
             -webkit-transform: translateX(100px);
@@ -83,6 +83,14 @@ body {
     .exit {
         border: 2px solid black;
         border-bottom-width: 4px;
+    }
+
+    .hero {
+        top: auto;
+        -webkit-transition: top 2s ease-in-out;
+        &.jump {
+             -webkit-transform: translateY(-70px);
+        }
     }
 }
 

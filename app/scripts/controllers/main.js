@@ -1,9 +1,17 @@
+// Zoo story game
+// The brown object (a monkey) is the hero of the game that wants to escape from the Zoo. 
+// The zookeepers are all over the place in their blue dresses, so don't run into them
+// cause you'll die.
+// Black objects are rocks, so you will have to jump over them to get through.
+// Later you will be able to throw bananas at the zookeepers to kill them.
+// Use Left-Right arrows to move, Up will jump (partly working only) and space will shoot later on.
+
 'use strict';
 
 angular.module('zooStoryApp')
 
 	// creating a factory for 3 types of objects in the game:
-	// hero is able to move and shoot, enemy moves only, obstacle is static
+	// obstacle is static, zookeeper is moving around, hero can move and jump and shoot
 
 	//basic object that everything else is derived from (obstacle)
 	.factory('Zoo', function() {
@@ -25,14 +33,14 @@ angular.module('zooStoryApp')
 			};
 			this.checkIfCollide = function (obj2) {
 				var points = this.getCoordinates();
-				console.log(points[1][0], obj2.getCoordinates()[0][0], points[0][0], obj2.getCoordinates()[0][0]);
 				if ( points[1][0] > obj2.getCoordinates()[0][0] && points[0][0] < obj2.getCoordinates()[0][0] ) {
-					console.log('reach from right');
+					return obj2;
 					//if obj2.type = 'enemy' then die, elseif exit then win, else stopMoving
 				}
 				if (points[1][0] > obj2.getCoordinates()[1][0] && points[0][0] < obj2.getCoordinates()[1][0]) {
-					console.log('reach from left');
+					return obj2;
 				}
+				return false;
 			};
 		}
 
@@ -52,14 +60,8 @@ angular.module('zooStoryApp')
 		var theHero = angular.copy(Zoo);
 
 		theHero.prototype = {
-			run: function () {
-				// detect ArrowKeyDown and change this.pos based on the keys pressed
-				// on('keyDown', function(e) {
-				// if e.key = 36 then this.pos[0]++; 
-				// forEach i in (!Hero objects) {this.checkIfCollide(i)};
-				// })
-				console.log('run forest run');
-				return 12;
+			run: function (runner) {
+				// checking collision function should come here
 			},
 			shoot: function () {
 				// detect spaceDown and create and move bullets based on that
@@ -75,13 +77,14 @@ angular.module('zooStoryApp')
 		
 		var Keeper = angular.copy(Zoo);
 
-		Keeper.prototype = {
-			animateEnemy: function () {
-				var enemyBlock = angular.element.find('#game .enemy');
-				console.log(enemyBlock);
-				console.log(this.id + ' timer');
-			}
-		};
+		// don't need it right now. maybe later.
+		// Keeper.prototype = {
+		// 	animateEnemy: function () {
+		// 		var enemyBlock = $document.find('#game .enemy');
+		// 		console.log(enemyBlock);
+		// 		console.log(this.id + ' timer');
+		// 	}
+		// };
 
 		return Keeper;
 	})
@@ -114,73 +117,113 @@ angular.module('zooStoryApp')
 		return Gate;
 	})
 
-	// Smaller controllers for each object type
-	// .controller('HeroCtrl', function() {
-	// 	console.log('test');
-	// })
-	// .controller('KeeperCtrl', function() {
-	// 	console.log('test2');
-	// })
-	// .controller('ObstacleCtrl', function() {
-	// 	console.log('test3');
-	// })
-	// .controller('ExitCtrl', function() {
-	// 	console.log('test4');
-	// })
 	// Main controller for creating characters, handling main game events etc.
 
 	.controller('MainCtrl', function ($scope, $document, Zoo, ZooKeeper, ZooKeeperZombie, Hero, Exit) {
 
-		function HeroCtrl ($element) {
-			console.log('hero');
-		}
 
-		function KeeperCtrl ($element) {
-			$element.on('click', function(){
-				if ($element.hasClass('moveright')) {
-					$element.removeClass('moveright');
-					return;
-				};
-				$element.addClass('moveright');
+		// Smaller functions for each object type
+		function HeroCtrl ($element, $document, $scope) {
+			$document.on('keydown', function(){
+				// console.log(event.keyCode);
+				if (event.keyCode === 37) { // left movement
+					var left = parseInt($element.css('left'));
+					myhero.pos[0] = left;
+
+					// Creating boundaries for the game world
+					// start of boundary, left side of container
+					if (left < 0 ) {
+						return;
+					}
+					$element.css('left', left - 4);
+					// All this should go up to theHero.prototype.run function...
+					for (var z = 1; z < $scope.ZooParts.length; z++ ) {
+						var contactType = myhero.checkIfCollide($scope.ZooParts[z]);
+						if (contactType.type === 'obstacle') {
+							console.log('you ran into a rock');
+							return;
+						}
+						if (contactType.type === 'enemy') {
+							console.log('oh you died sorry');
+							myhero.pos[0] = 0;
+							myhero.pos[1] = 0;
+							$element.css('opacity', 0.3);
+							return;
+						}
+					}
+					
+					
+				}
+				if (event.keyCode === 39) { // right movement
+					left = parseInt($element.css('left'));
+					myhero.pos[0] = left;
+
+					// Creating boundaries for the game world
+					// end of boundary, 940 comes from the width of the container
+					if (left > 940 - myhero.size[0]) {
+						return;
+					}
+
+					for (var y = 1; y < $scope.ZooParts.length; y++ ) {
+						contactType = myhero.checkIfCollide($scope.ZooParts[y]);
+						if (contactType.type === 'obstacle') {
+							console.log('you ran into a rock');
+							return;
+						}
+						if (contactType.type === 'enemy') {
+							console.log('oh you died sorry');
+							myhero.pos[0] = 0;
+							myhero.pos[1] = 0;
+							$element.css('opacity', 0.3);
+							return;
+						}
+					}
+					$element.css('left', left + 4);
+					
+					
+				}
+				if (event.keyCode === 38) { // jump
+					$element.addClass('jump');
+					setTimeout(function() {
+						$element.removeClass('jump');
+					}, 100);
+				}
 			});
 		}
 
-		function ObstacleCtrl ($element) {
-			console.log('obs');
+		function KeeperCtrl ($element) {
+			// keeps the keepers going
+			setInterval(function(){
+				if ($element.hasClass('moveright')) {
+					$element.removeClass('moveright');
+					return;
+				}
+				$element.addClass('moveright');
+			}, 1200);
 		}
+
+		function ObstacleCtrl () {
+			// this probably won't do anything
+		}
+
 		function ExitCtrl ($element) {
-			console.log('exit');
+			// testing if monkey is in the exit, if yes, display you won!!
 		}
 
 		var myhero = new Hero('monkeyMike', 'hero', [20, 60], [10, 480], '#a87d20', HeroCtrl);
 		$scope.ZooParts = [
 			myhero,
-			new ZooKeeper('zooKeeper', 'enemy', [30, 70], [470, 470], 'blue', KeeperCtrl),
-			new ZooKeeper('zooKeeper2', 'enemy', [30, 70], [640, 210], 'blue', KeeperCtrl),
+			new ZooKeeper('zooKeeper', 'enemy', [30, 70], [420, 470], 'blue', KeeperCtrl),
+			new ZooKeeper('zooKeeper2', 'enemy', [30, 70], [580, 210], 'blue', KeeperCtrl),
 			new ZooKeeperZombie('zooKeeper3', 'enemy', [25, 60], [240, 480], 'blue', KeeperCtrl),
 			new Zoo('rock', 'obstacle', [40, 40], [370, 500], 'black', ObstacleCtrl),
 			new Zoo('rock', 'obstacle', [80, 40], [130, 500], 'black', ObstacleCtrl),
-			new Zoo('rock', 'obstacle', [120, 20], [40, 310], 'black', ObstacleCtrl),
 			new Zoo('rock', 'obstacle', [120, 40], [570, 500], 'black', ObstacleCtrl),
 			new Zoo('rock', 'obstacle', [240, 20], [540, 280], 'black', ObstacleCtrl),
 			new Zoo('rock', 'obstacle', [180, 20], [760, 420], 'black', ObstacleCtrl),
 			new Exit('GoldenGate', 'exit', [40, 80], [880, 340], '#eef26b', ExitCtrl)
 		];
 
-		$scope.createZoo = function () {
-			console.log('hello zoo!');
-			// WRITE BOUNDARY OF ZOO!!!! - so that nobody can leave the gameworld
-		};
-		$scope.createZoo();
-		// console.log(Zoo);
-
-		// $scope.ZooElements = angular.element('div.container div').children();
-		// // var test2 = $scope.ZooElements.item(2);
-		// console.log($scope.ZooElements);
-		
-
-	
-		// console.log($scope.ZooParts[0].getCoordinates());
 
 	});
 	
