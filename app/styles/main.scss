@@ -1,0 +1,132 @@
+$icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+
+@import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
+
+// bower:scss
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+// endbower
+
+//mixins
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: left;
+    border-bottom: 1px solid #e5e5e5;
+
+    div {
+        display: block;
+        width: 40px;
+        height : 40px;
+        position: absolute;
+        z-index: 300;
+        color: #ffffff;
+    }
+
+    div.enemy {
+        -webkit-transition: all 1.2s ease-in-out;
+        
+        &.moveright {
+            -webkit-transform: translateX(100px);
+        }
+    }
+    
+}
+
+/* Game styling */
+
+.jumbotron#game {
+    padding: 0;
+    overflow: hidden;
+
+    .enemy {
+        border-radius: 8px;
+    }
+
+    .exit {
+        border: 2px solid black;
+        border-bottom-width: 4px;
+    }
+
+    .hero {
+        top: auto;
+        -webkit-transition: top 2s ease-in-out;
+        &.jump {
+             -webkit-transform: translateY(-70px);
+        }
+    }
+}
+
+
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 980px) {
+    .container {
+        width: 960px;
+    }
+
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .jumbotron {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        position: absolute;
+        width: 940px;
+        height: 540px;
+        border-bottom: 0;
+    }
+}
