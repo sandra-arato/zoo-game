@@ -372,8 +372,33 @@ module.exports = function (grunt) {
         singleRun: true
       }
     }
+
+    // Buildcontrol plugin for grunt makes it easy to 
+    // deploy to github pages the dist folder only
+
+    buildcontrol: {
+      options: {
+        dir: 'dist',
+        commit: true,
+        push: true,
+        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+      },
+      pages: {
+        options: {
+          remote: 'git@github.com:sandraszenti/zoo-game.git',
+          branch: 'gh-pages'
+        }
+      },
+      local: {
+        options: {
+          remote: '../',
+          branch: 'build'
+        }
+      }
+    }
   });
 
+  grunt.loadNpmTasks('grunt-build-control');
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
