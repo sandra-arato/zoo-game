@@ -433,7 +433,7 @@ module.exports = function (grunt) {
     'bowerInstall',
     'useminPrepare',
     'concurrent:dist',
-    'autoprefixer',
+    // 'autoprefixer',
     'concat',
     'ngmin',
     'copy:dist',
