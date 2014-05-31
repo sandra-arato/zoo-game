@@ -46,6 +46,11 @@ body {
     margin: 30px 0;
 }
 
+
+/////////////////////////////////////
+/* Game styling */
+/////////////////////////////////////
+
 /* Main marketing message and sign up button */
 .jumbotron {
     text-align: left;
@@ -54,7 +59,7 @@ body {
     div {
         display: block;
         width: 40px;
-        height : 40px;
+        height: 40px;
         position: absolute;
         z-index: 300;
         color: #ffffff;
@@ -67,10 +72,12 @@ body {
             -webkit-transform: translateX(100px);
         }
     }
-    
-}
 
-/* Game styling */
+    div.hero {
+        top: 0px;
+        -webkit-transition: top 0.7s ease-in-out;
+    }
+}
 
 .jumbotron#game {
     padding: 0;
@@ -83,14 +90,6 @@ body {
     .exit {
         border: 2px solid black;
         border-bottom-width: 4px;
-    }
-
-    .hero {
-        top: auto;
-        -webkit-transition: top 2s ease-in-out;
-        &.jump {
-             -webkit-transform: translateY(-70px);
-        }
     }
 }
 

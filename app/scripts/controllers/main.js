@@ -140,6 +140,9 @@ angular.module('zooStoryApp')
 					for (var z = 1; z < $scope.ZooParts.length; z++ ) {
 						var contactType = myhero.checkIfCollide($scope.ZooParts[z]);
 						if (contactType.type === 'obstacle') {
+							if ( contactType.pos[0] < $element.top ) {
+								console.log('jumping over');
+							};
 							console.log('you ran into a rock');
 							return;
 						}
@@ -166,6 +169,7 @@ angular.module('zooStoryApp')
 
 					for (var y = 1; y < $scope.ZooParts.length; y++ ) {
 						contactType = myhero.checkIfCollide($scope.ZooParts[y]);
+						console.log('rock', contactType.pos[0]);
 						if (contactType.type === 'obstacle') {
 							console.log('you ran into a rock');
 							return;
@@ -183,10 +187,26 @@ angular.module('zooStoryApp')
 					
 				}
 				if (event.keyCode === 38) { // jump
-					$element.addClass('jump');
+					event.preventDefault();
+					var top = parseInt($element.css('top'));
+					myhero.pos[1] = top;
+
+					// ground boundary of gameworld, 540 comes from container height
+
+					console.log(top);
+					$element.css('top', top - 60);
 					setTimeout(function() {
-						$element.removeClass('jump');
-					}, 100);
+						top = parseInt($element.css('top'));
+						myhero.pos[1] = top;
+						$element.css('top', top + 60);
+						if (top > 480) {
+							console.log('test');
+							$element.css('top', 480);
+							myhero.pos[1] = 480;
+							return;
+						}
+					}, 700);
+
 				}
 			});
 		}
@@ -203,7 +223,8 @@ angular.module('zooStoryApp')
 		}
 
 		function ObstacleCtrl () {
-			// this probably won't do anything
+			// check if hero is above or under currently? 
+			// let me know if hero hits a rock from top or bottom
 		}
 
 		function ExitCtrl ($element) {
