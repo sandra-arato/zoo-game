@@ -352,15 +352,18 @@ module.exports = function (grunt) {
     //     }
     //   }
     // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
+    uglify: {
+      options: {
+        mangle: false
+      }
+      // dist: {
+      //   files: {
+      //     '<%= yeoman.dist %>/scripts/scripts.js': [
+      //       '<%= yeoman.dist %>/scripts/scripts.js'
+      //     ]
+      //   }
+      // }
+    },
     // concat: {
     //   dist: {}
     // },
@@ -433,7 +436,7 @@ module.exports = function (grunt) {
     'bowerInstall',
     'useminPrepare',
     'concurrent:dist',
-    // 'autoprefixer',
+    'autoprefixer',
     'concat',
     'ngmin',
     'copy:dist',
