@@ -371,7 +371,7 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
-    }
+    },
 
     // Buildcontrol plugin for grunt makes it easy to 
     // deploy to github pages the dist folder only
