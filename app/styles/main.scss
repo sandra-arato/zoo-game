@@ -76,7 +76,7 @@ h1.win {
     div.obstacle {
         top: 0;
         left: 0;
-        background-image: url('/images/rock.png');
+        background-image: url('/zoo-game/images/rock.png');
     }
 
     div.enemy {
@@ -90,7 +90,7 @@ h1.win {
         -webkit-transition-timing: ease-in-ease-out;
         -webkit-transition-duration: 0.7s;
         z-index: 400;
-        background-image: url('/images/hero.png');
+        background-image: url('/zoo-game/images/hero.png');
 
         &.jump {
             -webkit-transform: translateY(-100px);
@@ -99,7 +99,7 @@ h1.win {
 
     div.exit {
         border: none;
-        background-image: url('/images/exit.png');
+        background-image: url('/zoo-game/images/exit.png');
     }
 }
 
