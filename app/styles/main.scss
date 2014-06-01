@@ -65,17 +65,30 @@ body {
         color: #ffffff;
     }
 
+    div.obstacle {
+        top: 0;
+        left: 0;
+    }
+
     div.enemy {
-        -webkit-transition: all 1.2s ease-in-out;
+        left: 0;
+        -webkit-transition: all 2.3s linear;
         
         &.moveright {
-            -webkit-transform: translateX(100px);
+            -webkit-transform: translateX(300px);
         }
     }
 
     div.hero {
-        top: 0px;
-        -webkit-transition: top 0.7s ease-in-out;
+        top: 0;
+        -webkit-transition-position: top, bottom;
+        -webkit-transition-timing: ease-in-ease-out;
+        -webkit-transition-duration: 0.7s;
+        z-index: 400;
+
+        &.jump {
+            -webkit-transform: translateY(-70px);
+        }
     }
 }
 
