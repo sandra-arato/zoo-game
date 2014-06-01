@@ -394,7 +394,7 @@ module.exports = function (grunt) {
       },
       local: {
         options: {
-          remote: 'git@github.com:sandraszenti/zoo-game.git',
+          remote: '../',
           branch: 'build'
         }
       }
