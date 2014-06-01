@@ -394,7 +394,7 @@ module.exports = function (grunt) {
       },
       local: {
         options: {
-          remote: '../zoo-game',
+          remote: 'zoo-game',
           branch: 'build'
         }
       }
