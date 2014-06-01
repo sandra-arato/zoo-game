@@ -391,13 +391,13 @@ module.exports = function (grunt) {
           remote: 'git@github.com:sandraszenti/zoo-game.git',
           branch: 'gh-pages'
         }
-      },
-      local: {
-        options: {
-          remote: '../',
-          branch: 'build'
-        }
       }
+      // local: {
+      //   options: {
+      //     remote: '../',
+      //     branch: 'build'
+      //   }
+      // }
     }
   });
 
