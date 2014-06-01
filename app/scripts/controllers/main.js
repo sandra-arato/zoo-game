@@ -32,6 +32,7 @@ angular.module('zooStoryApp')
 				return coordinates;
 			};
 			this.checkIfCollide = function (obj2) {
+				// this.winGame();
 				var points = this.getCoordinates();
 				var atLevelAndTouchesRight = ( ( points[1][0] > obj2.getCoordinates()[0][0] && points[0][0] < obj2.getCoordinates()[0][0] ) && points[0][1] <= obj2.getCoordinates()[0][1]);
 				var atLevelAndTouchesLeft = ( ( points[1][0] > obj2.getCoordinates()[1][0] && points[0][0] < obj2.getCoordinates()[1][0] ) && points[0][1] <= obj2.getCoordinates()[0][1]);
@@ -39,14 +40,10 @@ angular.module('zooStoryApp')
 				//when on same level, check if this object rans into obj2
 				if ( atLevelAndTouchesRight ) {
 					this.active = true;
-					console.log('touch from right', points[0][1], obj2.getCoordinates()[0][1]);
 					return obj2;
-					//if obj2.type = 'enemy' then die, elseif exit then win, else stopMoving
 				}
 				if ( atLevelAndTouchesLeft ) {
 					this.active = true;
-					console.log('touch from left',  points[0][1], obj2.getCoordinates()[0][1]);
-					// solidLevel.pos[1] = solidLevel.pos[1] - 20;
 					return obj2;
 				}
 				return false;
@@ -76,7 +73,12 @@ angular.module('zooStoryApp')
 	.factory('ZooKeeper', function(Zoo) {
 		
 		var Keeper = angular.copy(Zoo);
+		Keeper.trailer = 40;
 
+		Keeper.prototype = {
+			constructor: Keeper,
+			trail: 40
+		};
 		// don't need it right now. maybe later.
 		// Keeper.prototype = {
 		// 	animateEnemy: function () {
@@ -106,7 +108,6 @@ angular.module('zooStoryApp')
 
 	.factory('Exit', function(Zoo) {
 		var Gate = angular.copy(Zoo);
-
 		return Gate;
 	})
 
@@ -138,15 +139,13 @@ angular.module('zooStoryApp')
 						if (contactType.type === 'obstacle') {
 							return;
 						}
-						if (contactType.type === 'enemy' && contactType.pos[1] === myhero.pos[1]) {
-
+						if (contactType.type === 'enemy') {
 							console.log('oh you died sorry');
-							console.log('enemy, hero', contactType.pos[1], myhero.pos[1]);
 							$element.css('opacity', 0.8);
 						}
 					}
 
-					$element.css('left', left - 4);
+					$element.css('left', left - $scope.step);
 				}
 
 				if (event.keyCode === 39) { // right movement
@@ -166,17 +165,13 @@ angular.module('zooStoryApp')
 						if (contactType.type === 'obstacle') {
 							return;
 						}
-						if (contactType.type === 'enemy' && contactType.pos[1] === myhero.pos[1]) {
+						if (contactType.type === 'enemy') {
 							console.log('oh you died sorry');
-							console.log('enemy, hero', contactType.pos[1], myhero.pos[1]);
-
-							// myhero.pos[0] = 0;
-							// myhero.pos[1] = 0;
 							$element.css('opacity', 0.3);
-							$element.css('background', 'yel');
 						}
 					}
-					$element.css('left', left + 4);			
+
+					$element.css('left', left + $scope.step);			
 				}
 
 				if (event.keyCode === 38) { // jump
@@ -189,31 +184,24 @@ angular.module('zooStoryApp')
 					}
 
 					$element.addClass('jump');
-
-					var top = parseInt($element.css('top'));
-					// elevate the object for jumping
-					// myhero.pos[1] = top - 20;
-
 					setTimeout(function() {
 						$element.removeClass('jump');
 					}, 800);
-
-					// getting rid of elevation as obstacleCtrl sets new level anyway
-					// myhero.pos[1] = top + 20;
 				}
 			});
 		}
 
-		function KeeperCtrl ($element) {
+		function KeeperCtrl ($element, $scope) {
 			// keeps the keepers going
-			$element.addClass('moveright');
+			// $element.addClass('moveright');
+
 			setInterval(function(){
-				if ($element.hasClass('moveright')) {
-					$element.removeClass('moveright');
+				if ($element.hasClass('enemy')) {
+					$element.removeClass('enemy');
 					return;
 				}
-				$element.addClass('moveright');
-			}, 1200);
+				$element.addClass('enemy');
+			}, 1400);
 		}
 
 		function ObstacleCtrl ($element, $scope, $document) {
@@ -232,51 +220,62 @@ angular.module('zooStoryApp')
 					}
 				}
 
-
+				// on every move, check if the current obstacle can provide a new solid ground
+				// for the hero by checking X dir. collision and Y level difference
 				if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39) {
 					var solidLevel = objPair.checkIfCollide(myhero);
 
 					if (myhero.node.hasClass('jump')) {
-						myhero.pos[1] = myhero.pos[1] + 20;
+						myhero.pos[1] = myhero.pos[1] + 50;
 					}
 
 					if (solidLevel) {
-						console.log(objPair.id, solidLevel.pos[1] + solidLevel.size[1], positionY);
-						objPair.active = true;
 
 						if (myhero.pos[1] + myhero.size[1] > positionY) {
 							objPair.active = true;
 							solidLevel.pos[1] = positionY - objPair.size[1];
 							solidLevel.node.css('top', myhero.pos[1] - myhero.size[1]);
 						}
-
+						// hero drops when reaches the end of the obstacle
+						var heroDrops = ( (solidLevel.pos[0] +  solidLevel.size[0] - $scope.step) < objPair.pos[0] || ((solidLevel.pos[0] + $scope.step) >= (objPair.pos[0] + objPair.size[0])) );
+						
+						if (heroDrops) {
+							myhero.pos[1] = 450;
+							myhero.node.css('top', '450px');
+						}
 					}
-
-					
 
 				}
 			});
 
 		}
 
-		function ExitCtrl ($element, $scope) {
+		function ExitCtrl ($element, $scope, $document) {
+			$document.on('keydown', function($document){
+				// when the hero reaches the gate, the user wins
+				if ( (myhero.pos[0] + myhero.size[0]) > $scope.ZooParts[$scope.ZooParts.length - 1].pos[0]) {
+					$element.parent().parent().find('h1').addClass('win').html('You won! Reload the page to play again.');
+				}
+			});
+
 		}
 
-		var myhero = new Hero('monkeyMike', 'hero', [20, 60], [100, 480], '#a87d20', HeroCtrl);
+		var myhero = new Hero('monkeyMike', 'hero', [60, 70], [30, 450], 'transparent', HeroCtrl);
 
+		// this is the stepping unit I use for moving the hero
+		$scope.step = 4;
 		$scope.ZooParts = [
 			myhero,
-			new ZooKeeper('zooKeeper', 'enemy', [30, 70], [420, 470], 'blue', KeeperCtrl),
-			new ZooKeeper('zooKeeper2', 'enemy', [30, 70], [580, 210], 'blue', KeeperCtrl),
-			new ZooKeeperZombie('zooKeeper3', 'enemy', [25, 60], [240, 480], 'blue', KeeperCtrl),
-			new Zoo('rock1', 'obstacle', [140, 20], [230, 440], 'black', ObstacleCtrl),
-			new Zoo('rock2', 'obstacle', [80, 40], [130, 500], 'black', ObstacleCtrl),
-			new Zoo('rock', 'obstacle', [120, 40], [570, 500], 'black', ObstacleCtrl),
-			new Zoo('rock', 'obstacle', [240, 20], [540, 280], 'black', ObstacleCtrl),
-			new Zoo('rock', 'obstacle', [180, 20], [760, 420], 'black', ObstacleCtrl),
-			new Exit('GoldenGate', 'exit', [40, 80], [880, 340], '#eef26b', ExitCtrl)
+			new ZooKeeper('zooKeeper', 'enemy', [30, 70], [420, 450], 'blue', KeeperCtrl),
+			new ZooKeeper('zooKeeper2', 'enemy', [30, 70], [580, 190], 'blue', KeeperCtrl),
+			new ZooKeeperZombie('zooKeeper3', 'enemy', [25, 30], [240, 480], 'blue', KeeperCtrl),
+			new Zoo('rock1', 'obstacle', [140, 20], [330, 410], 'black', ObstacleCtrl),
+			new Zoo('rock2', 'obstacle', [80, 40], [130, 480], 'black', ObstacleCtrl),
+			new Zoo('rock', 'obstacle', [120, 40], [570, 480], 'black', ObstacleCtrl),
+			new Zoo('rock', 'obstacle', [240, 20], [540, 260], 'black', ObstacleCtrl),
+			new Zoo('rock', 'obstacle', [180, 20], [760, 400], 'black', ObstacleCtrl),
+			new Exit('GoldenGate', 'exit', [100, 80], [840, 320], 'transparent', ExitCtrl)
 		];
-
 
 	});
 	

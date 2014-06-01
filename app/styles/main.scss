@@ -51,8 +51,14 @@ body {
 /* Game styling */
 /////////////////////////////////////
 
-/* Main marketing message and sign up button */
+h1.win {
+    padding-left: 30px;
+    background-color: #15edc6;
+    color: #ffffff;
+}
+
 .jumbotron {
+    background: #bddbff;
     text-align: left;
     border-bottom: 1px solid #e5e5e5;
 
@@ -63,20 +69,19 @@ body {
         position: absolute;
         z-index: 300;
         color: #ffffff;
+        -webkit-transition: all 1.2s linear;
+        border-radius: 4px;
     }
 
     div.obstacle {
         top: 0;
         left: 0;
+        background-image: url('/images/rock.png');
     }
 
     div.enemy {
         left: 0;
-        -webkit-transition: all 2.3s linear;
-        
-        &.moveright {
-            -webkit-transform: translateX(300px);
-        }
+        -webkit-transform: translateX(100px);
     }
 
     div.hero {
@@ -85,25 +90,22 @@ body {
         -webkit-transition-timing: ease-in-ease-out;
         -webkit-transition-duration: 0.7s;
         z-index: 400;
+        background-image: url('/images/hero.png');
 
         &.jump {
-            -webkit-transform: translateY(-70px);
+            -webkit-transform: translateY(-100px);
         }
+    }
+
+    div.exit {
+        border: none;
+        background-image: url('/images/exit.png');
     }
 }
 
 .jumbotron#game {
     padding: 0;
     overflow: hidden;
-
-    .enemy {
-        border-radius: 8px;
-    }
-
-    .exit {
-        border: 2px solid black;
-        border-bottom-width: 4px;
-    }
 }
 
 
@@ -139,6 +141,6 @@ body {
         position: absolute;
         width: 940px;
         height: 540px;
-        border-bottom: 0;
+        border-bottom: 20px solid #35c471;
     }
 }
