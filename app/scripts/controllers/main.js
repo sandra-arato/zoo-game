@@ -260,7 +260,7 @@ angular.module('zooStoryApp')
 
 		}
 
-		var myhero = new Hero('monkeyMike', 'hero', [60, 70], [30, 450], 'transparent', HeroCtrl);
+		var myhero = new Hero('monkeyMike', 'hero', [60, 70], [30, 450], 'brown', HeroCtrl);
 
 		// this is the stepping unit I use for moving the hero
 		$scope.step = 4;
@@ -274,7 +274,7 @@ angular.module('zooStoryApp')
 			new Zoo('rock', 'obstacle', [120, 40], [570, 480], 'black', ObstacleCtrl),
 			new Zoo('rock', 'obstacle', [240, 20], [540, 260], 'black', ObstacleCtrl),
 			new Zoo('rock', 'obstacle', [180, 20], [760, 400], 'black', ObstacleCtrl),
-			new Exit('GoldenGate', 'exit', [100, 80], [840, 320], 'transparent', ExitCtrl)
+			new Exit('GoldenGate', 'exit', [100, 80], [840, 320], 'yellow', ExitCtrl)
 		];
 
 	});
